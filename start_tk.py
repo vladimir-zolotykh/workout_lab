@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 import tkinter as tk
+import dispatcher as D
 
 
 class Workout(tk.Tk):
@@ -13,8 +14,8 @@ class Workout(tk.Tk):
         self.rowconfigure(0, weight=1)
         box = tk.Frame(self)
         box.grid(column=0, row=0)
-        tk.Button(box, text="add workout", command=self.add_workout).grid()
-        tk.Button(box, text="OK").grid(sticky="w")
+        for name in D.Dispatcher.ensure_commands_collected():
+            tk.Button(box, text=name).grid(sticky="w")
 
     def add_workout(self):
         pass
