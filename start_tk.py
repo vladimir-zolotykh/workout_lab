@@ -15,6 +15,7 @@ import dispatcher as D
 class Workout(tk.Tk):
     def __init__(self, *args, **kwargs):
         self.dispatcher = kwargs.pop("dispatcher")
+        self.dispatcher.parent = self
         super().__init__(*args, **kwargs)
         self.title("Workout lab")
         self.geometry("404x603+360+164")

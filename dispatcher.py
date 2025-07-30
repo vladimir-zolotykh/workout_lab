@@ -4,7 +4,9 @@
 from typing import Callable
 from sqlalchemy.orm import Session
 from datetime import datetime
+import io
 import model as MD
+from showtext import ShowText
 
 
 def mark_command(func):
@@ -24,8 +26,9 @@ class Dispatcher:
         "biceps curl",
     ]
 
-    def __init__(self, session: Session) -> None:
+    def __init__(self, session: Session, parent=None) -> None:
         self.session = session
+        self.parent = parent
         self.ensure_commands_collected()
 
     @mark_command
@@ -36,8 +39,11 @@ class Dispatcher:
 
     @mark_command
     def show_exercise_names(self):
-        for ex_name in self.session.query(MD.ExerciseName).all():
-            print(ex_name)
+        with io.StringIO() as s:
+            for ex_name in self.session.query(MD.ExerciseName).all():
+                print(ex_name, file=s)
+            text = s.getvalue()
+            ShowText(self.parent, text=text)
 
     @mark_command
     def show_workouts(self) -> None:
