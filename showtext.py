@@ -38,9 +38,12 @@ class ShowText(tkinter.simpledialog.Dialog):
         self.text = text
         super().__init__(*args, **kwargs)
 
-    def body(self, master):
+    def write(self, text: str) -> None:
+        self.text_widget.insert(tk.INSERT, text)
+
+    def body(self, master) -> tk.Widget:
         w, h = get_size(self.text)
-        text = tk.Text(master, width=w, height=h)
+        text = self.text_widget = tk.Text(master, width=w, height=h)
         text.grid()
         text.insert("1.0", self.text)
         return text
