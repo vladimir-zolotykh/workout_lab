@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+import itertools
 import tkinter as tk
 import tkinter.simpledialog
 
 
 def get_size(text: str) -> tuple[int, int]:
-    width: int = 0
-    height: int = 0
-    for line in text.split("\n"):
-        if len(line) > width:
-            width = len(line)
-        height += 1
-    return width, height
+    it1, it2 = itertools.tee(text.split("\n"))
+    return len(max(it1, key=len)), sum(1 for _ in it2)
 
 
 class ShowText(tkinter.simpledialog.Dialog):
