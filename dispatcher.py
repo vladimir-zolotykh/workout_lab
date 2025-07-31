@@ -39,19 +39,13 @@ class Dispatcher:
 
     @mark_command
     def show_exercise_names(self):
-        with io.StringIO() as s:
-            for ex_name in self.session.query(MD.ExerciseName).all():
-                print(ex_name, file=s)
-            text = s.getvalue()
-            ShowText(self.parent, text=text)
+        for ex_name in self.session.query(MD.ExerciseName).all():
+            print(ex_name)
 
     @mark_command
     def show_workouts(self) -> None:
-        with io.StringIO() as s:
-            for w in self.session.query(MD.Workout).all():
-                print(w, file=s)
-            text: str = s.getvalue()
-            ShowText(self.parent, text=text)
+        for w in self.session.query(MD.Workout).all():
+            print(w)
 
     @mark_command
     def add_squat_workout(self):
