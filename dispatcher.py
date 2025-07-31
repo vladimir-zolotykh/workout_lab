@@ -15,7 +15,7 @@ def mark_command(func):
 
 
 class Dispatcher:
-    commands: list[Callable[[], None]] | None = None
+    commands: list[str] | None = None
     exercise_names: list[str] = [
         "front squat",
         "squat",
@@ -47,8 +47,11 @@ class Dispatcher:
 
     @mark_command
     def show_workouts(self) -> None:
-        for w in self.session.query(MD.Workout).all():
-            print(w)
+        with io.StringIO() as s:
+            for w in self.session.query(MD.Workout).all():
+                print(w, file=s)
+            text: str = s.getvalue()
+            ShowText(self.parent, text=text)
 
     @mark_command
     def add_squat_workout(self):
