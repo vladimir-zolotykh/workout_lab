@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Callable
 from sqlalchemy.orm import Session
 from datetime import datetime
-import io
 import model as MD
-from showtext import ShowText
+from showtext import file_io_redirected
 
 
 def mark_command(func):
@@ -38,11 +36,13 @@ class Dispatcher:
             self.session.commit()
 
     @mark_command
+    @file_io_redirected
     def show_exercise_names(self):
         for ex_name in self.session.query(MD.ExerciseName).all():
             print(ex_name)
 
     @mark_command
+    @file_io_redirected
     def show_workouts(self) -> None:
         for w in self.session.query(MD.Workout).all():
             print(w)

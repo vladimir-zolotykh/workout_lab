@@ -1,10 +1,29 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Iterator
+import io
+import builtins
+from typing import Iterator, Callable
+from functools import wraps
 import itertools
 import tkinter as tk
 import tkinter.simpledialog
+
+
+def file_io_redirected(method: Callable) -> Callable:
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        original_print = builtins.print
+        with io.StringIO() as s:
+            builtins.print = lambda *a, **k: original_print(*a, file=s, **k)
+            try:
+                method(self, *args, **kwargs)
+            finally:
+                builtins.print = original_print
+            text = s.getvalue()
+            ShowText(self.parent, text=text)
+
+    return wrapper
 
 
 def get_size(text: str) -> tuple[int, int]:
