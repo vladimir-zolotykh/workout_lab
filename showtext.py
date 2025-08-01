@@ -34,16 +34,13 @@ def get_size(text: str) -> tuple[int, int]:
 
 
 class ShowText(tkinter.simpledialog.Dialog):
-    def __init__(self, *args, text=None, **kwargs):
-        self.text = text
+    def __init__(self, *args, message="", **kwargs):
+        self.message = message
         super().__init__(*args, **kwargs)
 
-    def write(self, text: str) -> None:
-        self.text_widget.insert(tk.INSERT, text)
-
     def body(self, master) -> tk.Widget:
-        w, h = get_size(self.text)
-        text = self.text_widget = tk.Text(master, width=w, height=h)
+        w, h = get_size(self.message)
+        text = tk.Text(master, width=w, height=h)
         text.grid()
-        text.insert("1.0", self.text)
+        text.insert(tk.END, self.message)
         return text
