@@ -14,6 +14,7 @@ from scrollableframe import ScrollableFrame
 
 class WorkoutEditor(tk.Toplevel):
     def __init__(self, parent, session, exercise_names, workout=None):
+        self.parent = parent
         super().__init__(parent)
         self.session = session
         self.exercise_names = exercise_names  # list[str]
@@ -22,6 +23,7 @@ class WorkoutEditor(tk.Toplevel):
 
         self.title("Workout Editor")
         self.geometry("600x400")
+        self.protocol("WM_DELETE_WINDOW", self.on_close)
 
         # Workout timestamp
         ts_frame = ttk.Frame(self)
@@ -56,6 +58,10 @@ class WorkoutEditor(tk.Toplevel):
                 self.add_exercise(exercise=ex)
         else:
             self.add_exercise()
+
+    def on_close(self):
+        if isinstance(self.parent, tk.Tk):
+            self.parent.destroy()
 
     def add_exercise(self, exercise=None):
         frame = ttk.Frame(self.ex_frame)
