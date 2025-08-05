@@ -9,7 +9,9 @@ from sqlalchemy import (
     create_engine,
 )
 import model as MD
-from scrollableframe import ScrollableFrame
+
+# from scrollableframe import ScrollableFrame
+from scrolledframe import ScrolledFrame
 
 
 class WorkoutEditor(tk.Toplevel):
@@ -37,9 +39,10 @@ class WorkoutEditor(tk.Toplevel):
 
         # Scrollable Frame for exercises
         # self.ex_frame = ttk.Frame(self)
-        scrollable = ScrollableFrame(self)
+        # scrollable = ScrollableFrame(self)
+        scrollable = ScrolledFrame(self)
         scrollable.pack(fill="both", expand=True, padx=10, pady=5)
-        self.ex_frame = scrollable.scrollable_frame
+        self.ex_frame = scrollable.scrolled_frame
         # self.ex_frame.pack(fill="both", expand=True, padx=10)
 
         # Add / Save buttons
