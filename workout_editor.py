@@ -29,30 +29,30 @@ class WorkoutEditor(tk.Toplevel):
 
         # Workout timestamp
         ts_frame = ttk.Frame(self)
-        ts_frame.pack(fill="x", padx=10, pady=5)
-        ttk.Label(ts_frame, text="Started:").pack(side="left")
+        ts_frame.grid(sticky=tk.W, padx=10, pady=5)
+        ttk.Label(ts_frame, text="Started:").grid()
         self.timestamp_var = tk.StringVar()
         self.timestamp_var.set(datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"))
-        ttk.Entry(ts_frame, textvariable=self.timestamp_var, state="readonly").pack(
-            side="left"
-        )
+        ttk.Entry(ts_frame, textvariable=self.timestamp_var, state="readonly").grid()
 
         # Scrolled Frame for exercises
         # self.ex_frame = ttk.Frame(self)
         # scrolled = ScrollableFrame(self)
         scrolled = ScrolledFrame(self)
-        scrolled.pack(fill="both", expand=True, padx=10, pady=5)
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=1)
+        scrolled.grid(sticky=tk.NSEW, padx=10, pady=5)
         self.ex_frame = scrolled.scrolled_frame
-        # self.ex_frame.pack(fill="both", expand=True, padx=10)
 
         # Add / Save buttons
         btn_frame = ttk.Frame(self)
-        btn_frame.pack(fill="x", padx=10, pady=5)
-        ttk.Button(btn_frame, text="Add Exercise", command=self.add_exercise).pack(
-            side="left"
+        btn_frame.columnconfigure(0, weight=1)
+        btn_frame.grid(sticky=tk.EW, padx=10, pady=5)
+        ttk.Button(btn_frame, text="Add Exercise", command=self.add_exercise).grid(
+            sticky=tk.W
         )
-        ttk.Button(btn_frame, text="Save Workout", command=self.save_workout).pack(
-            side="right"
+        ttk.Button(btn_frame, text="Save Workout", command=self.save_workout).grid(
+            row=0, column=1
         )
 
         # Populate if editing an existing workout
@@ -68,7 +68,7 @@ class WorkoutEditor(tk.Toplevel):
 
     def add_exercise(self, exercise=None):
         frame = ttk.Frame(self.ex_frame)
-        frame.pack(fill="x", pady=2)
+        frame.grid(sticky=tk.EW, pady=2)
 
         name_var = tk.StringVar(value=exercise.exercise_name.name if exercise else "")
         weight_var = tk.DoubleVar(value=exercise.weight if exercise else 0.0)
@@ -81,17 +81,17 @@ class WorkoutEditor(tk.Toplevel):
             state="readonly",
             width=20,
         )
-        cb.pack(side="left", padx=5)
+        cb.grid(row=0, column=0, padx=5)
 
         weight_entry = ttk.Entry(frame, textvariable=weight_var, width=7)
-        weight_entry.pack(side="left", padx=5)
+        weight_entry.grid(row=0, column=1, padx=5)
         reps_entry = ttk.Entry(frame, textvariable=reps_var, width=5)
-        reps_entry.pack(side="left", padx=5)
+        reps_entry.grid(row=0, column=2, padx=5)
 
         del_btn = ttk.Button(
             frame, text="Delete", command=lambda: self.remove_exercise(frame)
         )
-        del_btn.pack(side="left", padx=5)
+        del_btn.grid(row=0, column=3, padx=5)
 
         self.exercise_widgets.append((frame, name_var, weight_var, reps_var))
 
