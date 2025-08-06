@@ -37,12 +37,12 @@ class WorkoutEditor(tk.Toplevel):
             side="left"
         )
 
-        # Scrollable Frame for exercises
+        # Scrolled Frame for exercises
         # self.ex_frame = ttk.Frame(self)
-        # scrollable = ScrollableFrame(self)
-        scrollable = ScrolledFrame(self)
-        scrollable.pack(fill="both", expand=True, padx=10, pady=5)
-        self.ex_frame = scrollable.scrolled_frame
+        # scrolled = ScrollableFrame(self)
+        scrolled = ScrolledFrame(self)
+        scrolled.pack(fill="both", expand=True, padx=10, pady=5)
+        self.ex_frame = scrolled.scrolled_frame
         # self.ex_frame.pack(fill="both", expand=True, padx=10)
 
         # Add / Save buttons
