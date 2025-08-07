@@ -4,10 +4,8 @@
 import tkinter as tk
 from tkinter import ttk
 from datetime import datetime
-from sqlalchemy import (
-    Engine,
-    create_engine,
-)
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 import model as MD
 
 # from scrollableframe import ScrollableFrame
@@ -145,6 +143,11 @@ def open_new_workout(root, session):
     WorkoutEditor(parent=root, session=session, exercise_names=exercise_names)
 
 
+def open_existing_workout(root: tk.Tk, session: Session, workout: MD.Workout | None):
+    exercise_names: list[str] = [e.name for e in session.query(MD.ExerciseName).all()]
+    WorkoutEditor(root, session, exercise_names=exercise_names, workout=workout)
+
+
 if __name__ == "__main__":
     root = tk.Tk()
     root.withdraw()
@@ -155,5 +158,7 @@ if __name__ == "__main__":
     )
     MD.Base.metadata.create_all(engine)
     with MD.Session(engine) as session:
-        open_new_workout(root, session)
+        workout: MD.Workout | None = session.query(MD.Workout).first()
+        # open_new_workout(root, session)
+        open_existing_workout(root, session, workout=workout)
         tk.mainloop()
