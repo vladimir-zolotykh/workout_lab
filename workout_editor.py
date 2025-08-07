@@ -95,7 +95,7 @@ class WorkoutEditor(tk.Toplevel):
 
     def remove_exercise(self, frame):
         for tup in self.exercise_widgets:
-            if tup[0] == frame:
+            if tup[0] is frame:
                 self.exercise_widgets.remove(tup)
                 break
         frame.destroy()
