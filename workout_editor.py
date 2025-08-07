@@ -138,12 +138,7 @@ class WorkoutEditor(tk.Toplevel):
         self.destroy()
 
 
-def open_new_workout(root, session):
-    exercise_names = [e.name for e in session.query(MD.ExerciseName).all()]
-    WorkoutEditor(parent=root, session=session, exercise_names=exercise_names)
-
-
-def open_existing_workout(root: tk.Tk, session: Session, workout: MD.Workout | None):
+def open_workout(root: tk.Tk, session: Session, workout: MD.Workout | None):
     exercise_names: list[str] = [e.name for e in session.query(MD.ExerciseName).all()]
     WorkoutEditor(root, session, exercise_names=exercise_names, workout=workout)
 
@@ -159,6 +154,5 @@ if __name__ == "__main__":
     MD.Base.metadata.create_all(engine)
     with MD.Session(engine) as session:
         workout: MD.Workout | None = session.query(MD.Workout).first()
-        # open_new_workout(root, session)
-        open_existing_workout(root, session, workout=workout)
+        open_workout(root, session, workout=workout)
         tk.mainloop()
