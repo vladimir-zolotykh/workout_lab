@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+from dataclasses import dataclass
 import tkinter as tk
 from tkinter import ttk
 from datetime import datetime
@@ -12,14 +13,28 @@ import model as MD
 from scrolledframe import ScrolledFrame
 
 
+@dataclass
+class ExerciseLog:
+    frame: ttk.Frame
+    name_var: tk.StringVar
+    weight_var: tk.DoubleVar
+    reps_var: tk.IntVar
+
+
 class WorkoutEditor(tk.Toplevel):
-    def __init__(self, parent, session, exercise_names, workout=None):
+    def __init__(
+        self,
+        parent,
+        session: Session,
+        exercise_names: list[str],
+        workout: MD.Workout | None = None,
+    ) -> None:
         self.parent = parent
         super().__init__(parent)
         self.session = session
         self.exercise_names = exercise_names  # list[str]
         self.workout = workout
-        self.exercise_widgets = []
+        self.exercise_widgets: list[ExerciseLog] = []
 
         self.title("Workout Editor")
         self.geometry("600x400")
@@ -49,9 +64,9 @@ class WorkoutEditor(tk.Toplevel):
         ttk.Button(btn_frame, text="Add Exercise", command=self.add_exercise).grid(
             sticky=tk.W
         )
-        ttk.Button(btn_frame, text="Save Workout", command=self.save_workout).grid(
-            row=0, column=1
-        )
+        ttk.Button(
+            btn_frame, text="Save Workout & Quit", command=self.save_workout
+        ).grid(row=0, column=1)
 
         # Populate if editing an existing workout
         if self.workout:
@@ -64,7 +79,7 @@ class WorkoutEditor(tk.Toplevel):
         if isinstance(self.parent, tk.Tk):
             self.parent.destroy()
 
-    def add_exercise(self, exercise=None):
+    def add_exercise(self, exercise: MD.Exercise | None = None):
         frame = ttk.Frame(self.ex_frame)
         frame.grid(sticky=tk.EW, pady=2)
 
@@ -86,47 +101,35 @@ class WorkoutEditor(tk.Toplevel):
         reps_entry = ttk.Entry(frame, textvariable=reps_var, width=5)
         reps_entry.grid(row=0, column=2, padx=5)
 
+        exlog: ExerciseLog = ExerciseLog(frame, name_var, weight_var, reps_var)
         del_btn = ttk.Button(
-            frame, text="Delete", command=lambda: self.remove_exercise(frame)
+            frame, text="Delete", command=lambda: self.remove_exercise(exlog)
         )
         del_btn.grid(row=0, column=3, padx=5)
 
-        self.exercise_widgets.append((frame, name_var, weight_var, reps_var))
+        self.exercise_widgets.append(exlog)
 
-    def remove_exercise(self, frame):
-        for tup in self.exercise_widgets:
-            if tup[0] is frame:
-                self.exercise_widgets.remove(tup)
-                break
-        frame.destroy()
+    def remove_exercise(self, exlog: ExerciseLog) -> None:
+        self.exercise_widgets.remove(exlog)
+        exlog.frame.destroy()
 
-    def save_workout(self):
+    def save_workout(self) -> None:
         # This method should create or update SQLAlchemy objects
         print("Saving workout:")
         started = datetime.strptime(self.timestamp_var.get(), "%Y-%m-%d %H:%M:%S")
 
         if not self.workout:
-            from model import Workout  # adjust to your module
-
-            self.workout = Workout(started=started)
+            self.workout = MD.Workout(started=started)
             self.session.add(self.workout)
         else:
             self.workout.exercises.clear()  # reset if editing
 
-        for _, name_var, weight_var, reps_var in self.exercise_widgets:
-            ex_name = name_var.get()
-            weight = weight_var.get()
-            reps = reps_var.get()
-
-            ex_name_obj = (
-                self.session.query(MD.ExerciseName).filter_by(name=ex_name).first()
-            )
-            if not ex_name_obj:
-                continue  # or create?
-
-            from model import Exercise  # adjust
-
-            exercise = Exercise(
+        for exlog in self.exercise_widgets:
+            ex_name = exlog.name_var.get()
+            weight = exlog.weight_var.get()
+            reps = exlog.reps_var.get()
+            ex_name_obj: MD.ExerciseName = MD.ensure_exercise(session, ex_name)
+            exercise = MD.Exercise(
                 exercise_name=ex_name_obj,
                 weight=weight,
                 reps=reps,
@@ -135,7 +138,7 @@ class WorkoutEditor(tk.Toplevel):
             self.session.add(exercise)
 
         self.session.commit()
-        self.destroy()
+        self.quit()
 
 
 def open_workout(root: tk.Tk, session: Session, workout: MD.Workout | None):
