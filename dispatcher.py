@@ -7,6 +7,7 @@ from datetime import datetime
 import contextlib
 import model as MD
 from showtext import ShowText
+import workout_editor as WE
 
 
 def mark_command(func):
@@ -36,6 +37,13 @@ class Dispatcher:
         for name in self.exercise_names:
             MD.ensure_exercise(self.session, name)
             self.session.commit()
+
+    @mark_command
+    def add_workout(self):
+        workout: MD.Workout | None = self.session.query(MD.Workout).first()
+        WE.open_workout(self, self.session, workout=workout)
+
+        pass
 
     @mark_command
     def show_exercise_names(self):
