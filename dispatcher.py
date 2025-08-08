@@ -41,7 +41,7 @@ class Dispatcher:
     @mark_command
     def add_workout(self):
         workout: MD.Workout | None = self.session.query(MD.Workout).first()
-        WE.open_workout(self, self.session, workout=workout)
+        WE.open_workout(self.parent, self.session, workout=workout)
 
         pass
 
