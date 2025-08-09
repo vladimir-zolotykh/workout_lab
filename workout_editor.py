@@ -21,7 +21,7 @@ class ExerciseLog:
     reps_var: tk.IntVar
 
 
-class WorkoutEditor(tk.Toplevel):
+class WorkoutEditor(tk.Canvas):
     def __init__(
         self,
         parent,
@@ -36,29 +36,22 @@ class WorkoutEditor(tk.Toplevel):
         self.workout = workout
         self.exercise_widgets: list[ExerciseLog] = []
 
-        self.title("Workout Editor")
-        self.geometry("600x400")
-        self.protocol("WM_DELETE_WINDOW", self.on_close)
+        self.box = ttk.Frame(self)
+        self.window_id = self.create_window((0, 0), window=self.box, anchor=tk.NW)
+        self.box.columnconfigure(0, weight=1)
 
-        # Workout timestamp
-        ts_frame = ttk.Frame(self)
+        ts_frame = ttk.Frame(self.box)
         ts_frame.grid(sticky=tk.W, padx=10, pady=5)
         ttk.Label(ts_frame, text="Started:").grid()
         self.timestamp_var = tk.StringVar()
         self.timestamp_var.set(datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"))
         ttk.Entry(ts_frame, textvariable=self.timestamp_var, state="readonly").grid()
 
-        # Scrolled Frame for exercises
-        # self.ex_frame = ttk.Frame(self)
-        # scrolled = ScrollableFrame(self)
-        scrolled = ScrolledFrame(self)
-        self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=1)
+        scrolled = ScrolledFrame(self.box)
         scrolled.grid(sticky=tk.NSEW, padx=10, pady=5)
         self.ex_frame = scrolled.scrolled_frame
 
-        # Add / Save buttons
-        btn_frame = ttk.Frame(self)
+        btn_frame = ttk.Frame(self.box)
         btn_frame.columnconfigure(0, weight=1)
         btn_frame.grid(sticky=tk.EW, padx=10, pady=5)
         ttk.Button(btn_frame, text="Add Exercise", command=self.add_exercise).grid(
@@ -68,16 +61,11 @@ class WorkoutEditor(tk.Toplevel):
             btn_frame, text="Save Workout & Quit", command=self.save_workout
         ).grid(row=0, column=1)
 
-        # Populate if editing an existing workout
         if self.workout:
             for ex in self.workout.exercises:
                 self.add_exercise(exercise=ex)
         else:
             self.add_exercise()
-
-    def on_close(self):
-        if isinstance(self.parent, tk.Tk):
-            self.parent.destroy()
 
     def add_exercise(self, exercise: MD.Exercise | None = None):
         frame = ttk.Frame(self.ex_frame)
@@ -128,7 +116,7 @@ class WorkoutEditor(tk.Toplevel):
             ex_name = exlog.name_var.get()
             weight = exlog.weight_var.get()
             reps = exlog.reps_var.get()
-            ex_name_obj: MD.ExerciseName = MD.ensure_exercise(session, ex_name)
+            ex_name_obj: MD.ExerciseName = MD.ensure_exercise(self.session, ex_name)
             exercise = MD.Exercise(
                 exercise_name=ex_name_obj,
                 weight=weight,
