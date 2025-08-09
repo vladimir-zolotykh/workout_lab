@@ -7,7 +7,7 @@ from datetime import datetime
 import contextlib
 import model as MD
 from showtext import ShowText
-import workout_editor as WE
+import show_add_dialog
 
 
 def mark_command(func):
@@ -41,9 +41,7 @@ class Dispatcher:
     @mark_command
     def add_workout(self):
         workout: MD.Workout | None = self.session.query(MD.Workout).first()
-        WE.open_workout(self.parent, self.session, workout=workout)
-
-        pass
+        show_add_dialog.ShowAddDialog(self.parent, self.session, workout)
 
     @mark_command
     def show_exercise_names(self):
