@@ -48,13 +48,9 @@ class WorkoutEditor(tk.Toplevel):
         self.timestamp_var.set(datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"))
         ttk.Entry(ts_frame, textvariable=self.timestamp_var, state="readonly").grid()
 
-        # Scrolled Frame for exercises
-        # self.ex_frame = ttk.Frame(self)
-        # scrolled = ScrollableFrame(self)
         scrolled = ScrolledFrame(self)
         self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=1)
-        scrolled.grid(sticky=tk.NSEW, padx=10, pady=5)
+        scrolled.grid(sticky=tk.EW, padx=10, pady=5)
         self.ex_frame = scrolled.scrolled_frame
 
         # Add / Save buttons
