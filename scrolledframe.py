@@ -9,8 +9,9 @@ class ScrolledFrame(ttk.Frame):
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=1)
         canvas = tk.Canvas(self)
-        canvas.grid(column=0, row=0, sticky=tk.EW)
+        canvas.grid(column=0, row=0, sticky=tk.NSEW)
         self.scrolled_frame = tk.Frame(canvas)
         hbar = tk.Scrollbar(self, orient=tk.HORIZONTAL, command=canvas.xview)
         hbar.grid(column=0, row=1, sticky=tk.EW)
