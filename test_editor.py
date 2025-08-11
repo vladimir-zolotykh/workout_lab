@@ -12,23 +12,22 @@ class WorkoutEditor(tk.Tk):
         self.title("Workout Editor")
         self.geometry("600x400")
 
-        # Workout timestamp
         ts_frame = ttk.Frame(self)
-        ts_frame.grid(sticky=tk.W, padx=10, pady=5)
+        ts_frame.grid(row=0, sticky=tk.W, padx=10, pady=5)
         ttk.Label(ts_frame, text="Started:").grid()
         self.timestamp_var = tk.StringVar()
         self.timestamp_var.set(datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"))
         ttk.Entry(ts_frame, textvariable=self.timestamp_var, state="readonly").grid()
 
-        # scrolled = ScrolledFrame(self)
-        # self.columnconfigure(0, weight=1)
-        # scrolled.grid(sticky=tk.EW, padx=10, pady=5)
-        # self.ex_frame = scrolled.scrolled_frame
+        text = tk.Text(self, width=60, height=10)
+        text.grid(row=1, sticky=tk.NS)
+        self.rowconfigure(1, weight=1)
 
         btn_frame = ttk.Frame(self)
         btn_frame.columnconfigure(0, weight=1)
-        btn_frame.grid(sticky=tk.EW, padx=10, pady=5)
-        ttk.Button(btn_frame, text="Add Exercise").grid(sticky=tk.W)
+        btn_frame.grid(row=2, sticky=tk.S, padx=10, pady=5)
+
+        ttk.Button(btn_frame, text="Add Exercise").grid(row=0, column=0)
         ttk.Button(btn_frame, text="Save Workout").grid(row=0, column=1)
 
 
