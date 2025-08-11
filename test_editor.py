@@ -19,8 +19,12 @@ class WorkoutEditor(tk.Tk):
         self.timestamp_var.set(datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"))
         ttk.Entry(ts_frame, textvariable=self.timestamp_var, state="readonly").grid()
 
-        text = tk.Text(self, width=60, height=10)
-        text.grid(row=1, sticky=tk.NS)
+        canv = tk.Canvas(self, width=500, height=200)
+        canv.grid(row=1, sticky=tk.NSEW)
+        canv.create_line(0, 0, 500, 200)
+        canv.create_line(0, 200, 500, 0)
+        # text = tk.Text(self, width=60, height=10)
+        # text.grid(row=1, sticky=tk.NS)
         self.rowconfigure(1, weight=1)
 
         btn_frame = ttk.Frame(self)
