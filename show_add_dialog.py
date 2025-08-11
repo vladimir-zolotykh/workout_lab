@@ -22,5 +22,5 @@ class ShowAddDialog(tkinter.simpledialog.Dialog):
         workout_editor = WE.WorkoutEditor(
             master, self.session, exercise_names=exercise_names, workout=self.workout
         )
-        workout_editor.grid(sticky=tk.NSEW)
+        workout_editor.grid(row=0, column=0, sticky=tk.NSEW)
         return workout_editor
