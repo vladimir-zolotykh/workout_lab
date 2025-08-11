@@ -37,26 +37,29 @@ class WorkoutEditor(tk.Toplevel):
         self.exercise_widgets: list[ExerciseLog] = []
 
         self.title("Workout Editor")
-        self.geometry("600x400")
+        # self.geometry("600x400")
         self.protocol("WM_DELETE_WINDOW", self.on_close)
 
         # Workout timestamp
         ts_frame = ttk.Frame(self)
-        ts_frame.grid(sticky=tk.W, padx=10, pady=5)
+        ts_frame.grid(row=0, column=0, sticky=tk.W, padx=10, pady=5)
         ttk.Label(ts_frame, text="Started:").grid()
         self.timestamp_var = tk.StringVar()
         self.timestamp_var.set(datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"))
         ttk.Entry(ts_frame, textvariable=self.timestamp_var, state="readonly").grid()
 
         scrolled = ScrolledFrame(self)
+        scrolled.grid(row=1, column=0, sticky=tk.NSEW, padx=10, pady=5)
         self.columnconfigure(0, weight=1)
-        scrolled.grid(sticky=tk.EW, padx=10, pady=5)
+        self.rowconfigure(1, weight=1)
         self.ex_frame = scrolled.scrolled_frame
 
         # Add / Save buttons
         btn_frame = ttk.Frame(self)
         btn_frame.columnconfigure(0, weight=1)
-        btn_frame.grid(sticky=tk.EW, padx=10, pady=5)
+        btn_frame.grid(row=2, column=0, columnspan=2, sticky=tk.EW, padx=10, pady=5)
+        btn_frame.columnconfigure(0, weight=1)
+        btn_frame.columnconfigure(1, weight=1)
         ttk.Button(btn_frame, text="Add Exercise", command=self.add_exercise).grid(
             sticky=tk.W
         )

@@ -26,5 +26,6 @@ class ScrolledFrame(ttk.Frame):
         self.bind("<Configure>", self._on_frame_configure)
 
     def _on_frame_configure(self, event):
-        print(f"{event = }")
-        self.canvas.configure(width=200, height=50)
+        pass
+        # print(f"{event = }")
+        # self.canvas.configure(width=200, height=50)
