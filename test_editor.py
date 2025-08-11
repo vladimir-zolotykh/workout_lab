@@ -23,16 +23,14 @@ class WorkoutEditor(tk.Tk):
         canv.grid(row=1, sticky=tk.NSEW)
         canv.create_line(0, 0, 500, 200)
         canv.create_line(0, 200, 500, 0)
-        # text = tk.Text(self, width=60, height=10)
-        # text.grid(row=1, sticky=tk.NS)
         self.rowconfigure(1, weight=1)
 
         btn_frame = ttk.Frame(self)
-        btn_frame.columnconfigure(0, weight=1)
-        btn_frame.grid(row=2, sticky=tk.S, padx=10, pady=5)
+        btn_frame.grid(row=2, columnspan=2, sticky=tk.EW, padx=10, pady=5)
 
-        ttk.Button(btn_frame, text="Add Exercise").grid(row=0, column=0)
-        ttk.Button(btn_frame, text="Save Workout").grid(row=0, column=1)
+        btn_frame.columnconfigure(0, weight=1)
+        ttk.Button(btn_frame, text="Add Exercise").grid(row=0, column=0, sticky=tk.W)
+        ttk.Button(btn_frame, text="Save Workout").grid(row=0, column=1, sticky=tk.E)
 
 
 if __name__ == "__main__":
