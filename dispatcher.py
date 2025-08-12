@@ -5,8 +5,10 @@ import io
 from sqlalchemy.orm import Session
 from datetime import datetime
 import contextlib
+from tkinter.simpledialog import _place_window  # type: ignore[attr-defined]
 import model as MD
 from showtext import ShowText
+import workout_editor as WE
 
 
 def mark_command(func):
@@ -30,6 +32,14 @@ class Dispatcher:
         self.session = session
         self.parent = parent
         self.ensure_commands_collected()
+
+    @mark_command
+    def add_workout(self) -> None:
+        workout: MD.Workout | None = self.session.query(MD.Workout).first()
+        we: WE.WorkoutEditor = WE.open_workout(
+            self.parent, self.session, workout=workout
+        )
+        _place_window(we, self.parent)  # `parent' is Workout obj
 
     @mark_command
     def init_exercises(self) -> None:

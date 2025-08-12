@@ -140,9 +140,11 @@ class WorkoutEditor(tk.Toplevel):
         self.quit()
 
 
-def open_workout(root: tk.Tk, session: Session, workout: MD.Workout | None):
+def open_workout(
+    root: tk.Tk | tk.Toplevel, session: Session, workout: MD.Workout | None
+) -> WorkoutEditor:
     exercise_names: list[str] = [e.name for e in session.query(MD.ExerciseName).all()]
-    WorkoutEditor(root, session, exercise_names=exercise_names, workout=workout)
+    return WorkoutEditor(root, session, exercise_names=exercise_names, workout=workout)
 
 
 if __name__ == "__main__":
