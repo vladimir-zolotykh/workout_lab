@@ -18,14 +18,9 @@ class ScrolledFrame(ttk.Frame):
         vbar = tk.Scrollbar(self, orient=tk.VERTICAL, command=canvas.yview)
         vbar.grid(column=1, row=0, sticky=tk.NS)
         self.canv_id = canvas.create_window((0, 0), window=self.scrolled_frame)
-        self.scrolled_frame.bind(
-            "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox(tk.ALL))
-        )
+        self.scrolled_frame.bind("<Configure>", self._on_frame_configure)
         canvas.configure(xscrollcommand=hbar.set)
         canvas.configure(yscrollcommand=vbar.set)
-        self.bind("<Configure>", self._on_frame_configure)
 
     def _on_frame_configure(self, event):
-        pass
-        # print(f"{event = }")
-        # self.canvas.configure(width=200, height=50)
+        self.canvas.configure(scrollregion=self.canvas.bbox(tk.ALL))
