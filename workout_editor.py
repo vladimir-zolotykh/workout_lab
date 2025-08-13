@@ -10,7 +10,8 @@ from sqlalchemy.orm import Session
 import model as MD
 
 # from scrollableframe import ScrollableFrame
-from scrolledframe import ScrolledFrame
+# from scrolledframe import ScrolledFrame
+from scrollable_frame import ScrollableFrame
 
 
 @dataclass
@@ -46,11 +47,18 @@ class WorkoutEditor(tk.Toplevel):
         self.timestamp_var.set(datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"))
         ttk.Entry(ts_frame, textvariable=self.timestamp_var, state="readonly").grid()
 
-        scrolled = ScrolledFrame(self)
-        scrolled.grid(row=1, column=0, sticky=tk.NSEW, padx=10, pady=5)
+        self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
-        self.rowconfigure(1, weight=1)
-        self.ex_frame = scrolled.scrolled_frame
+
+        sf = ScrollableFrame(self, lock_x=False, lock_y=False)
+        sf.grid(row=0, column=0, sticky="nsew")
+
+        # scrolled = ScrolledFrame(self)
+        # scrolled.grid(row=1, column=0, sticky=tk.NSEW, padx=10, pady=5)
+        # self.columnconfigure(0, weight=1)
+        # self.rowconfigure(1, weight=1)
+        # self.ex_frame = scrolled.scrolled_frame
+        self.sf_inner = sf.inner
 
         # Add / Save buttons
         btn_frame = ttk.Frame(self)
@@ -80,9 +88,10 @@ class WorkoutEditor(tk.Toplevel):
                 self.parent.destroy()
 
     def add_exercise(self, exercise: MD.Exercise | None = None):
-        frame = ttk.Frame(self.ex_frame)
+        # frame = ttk.Frame(self.ex_frame)
+        frame = ttk.Frame(self.sf_inner)
         frame.grid(sticky=tk.EW, pady=2)
-
+        self.sf_inner.columnconfigure(0, weight=1)
         name_var = tk.StringVar(value=exercise.exercise_name.name if exercise else "")
         weight_var = tk.DoubleVar(value=exercise.weight if exercise else 0.0)
         reps_var = tk.IntVar(value=exercise.reps if exercise else 1)
