@@ -28,9 +28,6 @@ class Workout(tk.Tk):
                 sticky="w"
             )
 
-    def add_workout(self):
-        pass
-
 
 parser = argparse.ArgumentParser(
     description="Edit workout",

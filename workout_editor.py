@@ -35,9 +35,7 @@ class WorkoutEditor(tk.Toplevel):
         self.exercise_names = exercise_names  # list[str]
         self.workout = workout
         self.exercise_widgets: list[ExerciseLog] = []
-
         self.title("Workout Editor")
-        # self.geometry("600x400")
         self.protocol("WM_DELETE_WINDOW", self.on_close)
 
         # Workout timestamp
@@ -63,9 +61,9 @@ class WorkoutEditor(tk.Toplevel):
         ttk.Button(btn_frame, text="Add Exercise", command=self.add_exercise).grid(
             sticky=tk.W
         )
-        ttk.Button(
-            btn_frame, text="Save Workout & Quit", command=self.save_workout
-        ).grid(row=0, column=1)
+        ttk.Button(btn_frame, text="Save Workout", command=self.save_workout).grid(
+            row=0, column=1
+        )
 
         # Populate if editing an existing workout
         if self.workout:
@@ -76,7 +74,10 @@ class WorkoutEditor(tk.Toplevel):
 
     def on_close(self):
         if isinstance(self.parent, tk.Tk):
-            self.parent.destroy()
+            if self.parent.__class__.__name__ == "Workout":
+                self.destroy()
+            else:
+                self.parent.destroy()
 
     def add_exercise(self, exercise: MD.Exercise | None = None):
         frame = ttk.Frame(self.ex_frame)
@@ -137,7 +138,6 @@ class WorkoutEditor(tk.Toplevel):
             self.session.add(exercise)
 
         self.session.commit()
-        self.quit()
 
 
 def open_workout(
