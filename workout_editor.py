@@ -51,7 +51,7 @@ class WorkoutEditor(tk.Toplevel):
         self.columnconfigure(0, weight=1)
 
         sf = ScrollableFrame(self, lock_x=False, lock_y=False)
-        sf.grid(row=0, column=0, sticky="nsew")
+        sf.grid(row=1, column=0, sticky="nsew")
 
         # scrolled = ScrolledFrame(self)
         # scrolled.grid(row=1, column=0, sticky=tk.NSEW, padx=10, pady=5)
